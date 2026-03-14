@@ -1,0 +1,45 @@
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LassoCV
+import matplotlib.pyplot as plt
+
+# 1. Load the 'Carseats' dataset from the ISLR library (via statsmodels)
+df = sm.datasets.get_rdataset("Carseats", "ISLR").data
+
+# 2. Prep the data: Convert categorical variables (ShelveLoc, Urban, US) into dummy variables
+# Lasso needs numbers, not strings!
+df_final = pd.get_dummies(df, drop_first=True)
+
+# 3. Define Features (X) and Target (y)
+X = df_final.drop('Sales', axis=1)
+y = df_final['Sales']
+
+# 4. Split and Scale
+# Essential: Lasso relies on distance, so all variables must be on the same scale.
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# 5. The "Smart" Vibe: LassoCV
+# LassoCV automatically tests different alpha values to find the best one.
+model = LassoCV(cv=5, random_state=42)
+model.fit(X_train_scaled, y_train)
+
+# 6. Interpret the Results
+coeffs = pd.Series(model.coef_, index=X.columns).sort_values(ascending=False)
+
+print(f"Optimal Alpha: {model.alpha_:.4f}")
+print(f"Model R2 Score: {model.score(X_test_scaled, y_test):.4f}")
+print("\n--- Feature Impact (Coefficient Weights) ---")
+print(coeffs)
+
+coeffs.plot(kind='barh', color='skyblue')
+plt.title("What actually drives Carseat Sales?")
+plt.xlabel("Coefficient Strength")
+plt.axvline(x=0, color='black', lw=1)
+plt.show()
