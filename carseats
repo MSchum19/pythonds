@@ -6,7 +6,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LassoCV
 import matplotlib.pyplot as plt
 
-# 1. Load the 'Carseats' dataset from the ISLR library (via statsmodels)
+# 1. Load the 'Carseats' dataset
 df = sm.datasets.get_rdataset("Carseats", "ISLR").data
 
 # 2. Prep the data: Convert categorical variables (ShelveLoc, Urban, US) into dummy variables
@@ -25,8 +25,8 @@ scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
-# 5. The "Smart" Vibe: LassoCV
-# LassoCV automatically tests different alpha values to find the best one.
+# 5. LassoCV
+# test different alpha values to find the best one.
 model = LassoCV(cv=5, random_state=42)
 model.fit(X_train_scaled, y_train)
 
