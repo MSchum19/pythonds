@@ -32,3 +32,5 @@ Age                -0.785822
 Price              -2.238539
 
 dtype: float64
+
+A good shelf location has almost twice the impact in sales over a medium shelf location, and has more than twice the impact of the level of advertising.
