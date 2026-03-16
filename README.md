@@ -1,4 +1,4 @@
-# Problems sovled using Python
+# Examining the 'Carseats' dataset using Python
 
 Using a lasso regression model in Python to measure the impact of different variables on sales:
 
